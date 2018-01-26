@@ -4,6 +4,7 @@ import _ from 'lodash'
 import cardVisa from '../../../assets/images/card_visa.png'
 import cardMastercard from '../../../assets/images/card_mastercard.png'
 import cardAmex from '../../../assets/images/card_amex.png'
+import cardDiscover from '../../../assets/images/card_discover.png'
 
 export default props => {
   const brandLower = _.lowerCase(props.brand)
@@ -13,6 +14,8 @@ export default props => {
     return <Image style={props.style} source={cardMastercard} />
   } else if (brandLower === 'american express') {
     return <Image style={props.style} source={cardAmex} />
+  } else if (brandLower === 'discover') {
+    return (<Image style={props.style} source={cardDiscover} />)
   }
   return <View />
 }
