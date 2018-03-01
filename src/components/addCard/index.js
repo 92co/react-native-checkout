@@ -30,6 +30,7 @@ export default class AddCard extends Component {
     expiryPlaceholderText: PropTypes.string,
     cvcPlaceholderText: PropTypes.string,
     cardNumberErrorMessage: PropTypes.string,
+    userErrorMessage: PropTypes.string,
     expiryErrorMessage: PropTypes.string,
     cvcErrorMessage: PropTypes.string,
   }
@@ -42,6 +43,7 @@ export default class AddCard extends Component {
     expiryPlaceholderText: 'MM/YY',
     cvcPlaceholderText: 'CVC',
     cardNumberErrorMessage: 'Card Number is incorrect',
+    userErrorMessage: 'You must create an account before adding a payment method',
     expiryErrorMessage: 'Expiry is incorrect',
     cvcErrorMessage: 'CVC is incorrect',
   }
@@ -76,8 +78,11 @@ export default class AddCard extends Component {
     const cardNumberShowError = this.state.cardNumberDirty && !this.isCardNumberValid()
     const expiryShowError = this.state.expiryDirty && !this.isExpiryValid()
     const cvcShowError = this.state.cvcDirty && !this.isCvcValid()
+    const userShowError = this.props.user ? false : true 
     let error = ''
-    if (cardNumberShowError) {
+    if (userShowError){
+      error = this.props.userErrorMessage
+    } else if (cardNumberShowError) {
       error = this.props.cardNumberErrorMessage
     } else if (expiryShowError) {
       error = this.props.expiryErrorMessage
@@ -88,6 +93,7 @@ export default class AddCard extends Component {
       ...this.state,
       error: this.state.error || error,
       cardNumberShowError: cardNumberShowError,
+      userShowError: userShowError,
       expiryShowError: expiryShowError,
       cvcShowError: cvcShowError,
       cardNumberFormatted: payment.fns.formatCardNumber(this.state.cardNumber),
@@ -193,7 +199,7 @@ export default class AddCard extends Component {
           styles={styles}
           onPress={() => {
             this.setState({ expiryDirty: true, cardNumberDirty: true, cvcDirty: true })
-            if (this.isCardNumberValid() && this.isExpiryValid() && this.isCvcValid()) {
+            if (this.isCardNumberValid() && this.isExpiryValid() && this.isCvcValid() && this.props.user) {
               this.setState({ addingCard: true })
               this.props
                 .addCardHandler(calculatedState.cardNumber, calculatedState.expiry, calculatedState.cvc)
